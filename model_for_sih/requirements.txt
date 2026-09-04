@@ -1,0 +1,15 @@
+pandas
+numpy
+scikit-learn
+requests
+python-dotenv
+rasterio
+tqdm
+shapely
+geopandas
+osmium
+joblib
+fastapi
+uvicorn
+pydantic
+httpx

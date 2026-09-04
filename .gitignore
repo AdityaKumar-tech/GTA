@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Python Virtual Environments
+venv/
+**/venv/
+sihenv/
+**/sihenv/
+
+# Environment Variables & Secrets
+.env
+**/.env
+
+# OS Metadata
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# Python Cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Raw Datasets (>5GB raw satellite files exceeding GitHub 100MB limit)
+model_for_sih/data/raw/
+**/data/raw/
+*.osm.pbf
+*.tif
+*.pbf
+
+# Git Backups
+*.git_backup
+**/.git_backup
