@@ -10,6 +10,7 @@ from rasterio.windows import Window
 
 from api.schemas import ThermalEventInput, PredictionResponse, BatchPredictionResponse
 from api.services.risk_service import RiskAssessmentService
+from api.services.landmask_service import LandmaskService
 from api.config import BASE_DIR
 
 
@@ -78,7 +79,11 @@ class MLModelService:
             except Exception:
                 pass
 
-        # Geographic biome fallback for coordinates across India
+        # If coordinate is in the ocean, return water class (80) rather than terrestrial biomes
+        if LandmaskService.get_instance().is_ocean(lat, lon):
+            return 80
+
+        # Geographic biome fallback for terrestrial coordinates across India
         # Forest belts: Western Ghats, Northeast, Himalayan foothills, Central Indian forests
         if (lat >= 26.0 and lon >= 88.0) or (8.0 <= lat <= 16.0 and 74.0 <= lon <= 77.5) or (19.0 <= lat <= 24.0 and 80.0 <= lon <= 85.0):
             return 10  # Tree cover / Forest

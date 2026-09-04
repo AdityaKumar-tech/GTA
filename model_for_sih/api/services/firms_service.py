@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from api.config import FIRMS_MAP_KEY, INDIA_BBOX, FIRMS_SOURCES, BASE_DIR
 from api.schemas import ThermalEventInput
+from api.services.landmask_service import LandmaskService
 
 
 class FIRMSLiveService:
@@ -139,14 +140,20 @@ class FIRMSLiveService:
             return None
 
     def _dataframe_to_geojson(self, df: pd.DataFrame, source: str, date_str: str) -> Dict[str, Any]:
-        """Converts raw FIRMS DataFrame into standard GeoJSON with AI fire classifications."""
+        """Converts raw FIRMS DataFrame into standard GeoJSON with AI fire classifications, excluding ocean points."""
         raw_events: List[ThermalEventInput] = []
         raw_rows: List[Dict[str, Any]] = []
+        landmask = LandmaskService.get_instance()
 
         for idx, row in df.iterrows():
             try:
                 lat = float(row.get("latitude", 0.0))
                 lon = float(row.get("longitude", 0.0))
+
+                # Discard any point located in the ocean / sea
+                if landmask.is_ocean(lat, lon):
+                    continue
+
                 frp = float(row.get("frp", 10.0))
                 ti4 = float(row.get("bright_ti4", 330.0))
                 ti5 = float(row.get("bright_ti5", 300.0))

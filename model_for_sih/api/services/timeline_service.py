@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 
 from api.config import BASE_DIR
 from api.services.risk_service import RiskAssessmentService
+from api.services.landmask_service import LandmaskService
 
 
 class TimelineArchiveService:
@@ -21,7 +22,7 @@ class TimelineArchiveService:
         self._load_dataset()
 
     def _load_dataset(self):
-        """Loads and pre-indexes the 174,000+ historical events dataset."""
+        """Loads and pre-indexes the 174,000+ historical events dataset, filtering out ocean points."""
         feat_path = BASE_DIR / "data" / "processed" / "ml" / "fire_type_dataset.csv"
         events_path = BASE_DIR / "data" / "processed" / "events" / "firms_thermal_events.csv"
 
@@ -48,8 +49,14 @@ class TimelineArchiveService:
             df["first_detection"] = pd.to_datetime(df["first_detection"], errors="coerce")
             df["last_detection"] = pd.to_datetime(df["last_detection"], errors="coerce")
 
+            # Remove all ocean points and confirmed water body points
+            initial_count = len(df)
+            landmask = LandmaskService.get_instance()
+            df = landmask.filter_dataframe(df, lat_col="latitude", lon_col="longitude", remove_water_class=True)
+            removed_ocean = initial_count - len(df)
+
             self.df = df
-            print(f"✓ Timeline archive loaded: {len(self.df):,} historical thermal events")
+            print(f"✓ Timeline archive loaded: {len(self.df):,} historical thermal events ({removed_ocean:,} ocean points filtered out)")
         except Exception as e:
             print(f"Error loading timeline archive: {e}")
             self.df = None
