@@ -3,7 +3,7 @@ import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Crosshair, MapPin, Layers } from "lucide-react";
 
-const API_BASE_URL = "http://13.221.65.205:8000/api/v1";
+const API_BASE_URL = "https://api.nightskylight.com/api/v1";
 
 const Map = ({
   onSelectHotspot,
