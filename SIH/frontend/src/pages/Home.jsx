@@ -7,7 +7,7 @@ import TimelineControl from '../components/TimelineControl'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
-const API_BASE_URL = 'http://localhost:8000/api/v1'
+const API_BASE_URL = 'http://13.221.65.205:8000/api/v1'
 
 const Home = () => {
   const [firePannel, setFirePannel] = useState(false)
