@@ -2,6 +2,9 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Crosshair, MapPin, Layers } from "lucide-react";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
+
+maplibregl.setWorkerUrl(workerUrl);
 
 const API_BASE_URL = "https://api.nightskylight.com/api/v1";
 
